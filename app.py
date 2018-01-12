@@ -1,3 +1,7 @@
+'''
+此模块的主要作用是：在网页中使用训练好的模型文件，通过选择图像进行预测
+'''
+
 import os.path
 
 import tornado.httpserver
@@ -11,6 +15,7 @@ import pickle
 from tornado.options import define, options
 define("port", default=8000, help="run on the given port", type=int)
 
+#训练模型
 netparams = 'train.params'
 ids_synsets_name = 'ids_synsets'
 
@@ -19,9 +24,9 @@ ids_synsets = pickle.load(f)
 f.close()
 
 
-PP = Pre(netparams,ids_synsets[1],1)
+PP = Pre(netparams, ids_synsets[1], 1)
 
-
+#移除文件
 def RemoveFile(dirhname):
     for root, dirs, files in os.walk(dirhname):
         for name in files:
@@ -29,7 +34,7 @@ def RemoveFile(dirhname):
 
 class IndexHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render('index.html',imagename="",classname="")
+        self.render('index.html', imagename="", classname="")
 
 class Update_Image(tornado.web.RequestHandler):
     def post(self):
@@ -40,14 +45,14 @@ class Update_Image(tornado.web.RequestHandler):
         f.close()
         classname = PP.PreName("./static/image/"+img['filename']).lower()
         # classname = None
-        self.render('index.html',imagename="./static/image/"+img['filename'],classname = classname)
+        self.render('index.html', imagename="./static/image/"+img['filename'], classname=classname)
 
 if __name__ == '__main__':
     tornado.options.parse_command_line()
     app = tornado.web.Application(
         handlers=[(r'/', IndexHandler), (r'/Updata_Image', Update_Image)],
         template_path=os.path.join(os.path.dirname(__file__), "./templates"),
-        static_path=os.path.join(os.path.dirname(__file__),'./static'),
+        static_path=os.path.join(os.path.dirname(__file__), './static'),
         debug=True
     )
     http_server = tornado.httpserver.HTTPServer(app)
