@@ -108,3 +108,4 @@ ENV/
 /single_model/model-symbol.json
 /single_model/new_model-0000.params
 /single_model/train.params
+/single_model/ids_synsets
