@@ -15,7 +15,7 @@ from model import Net
 
 train_nd = nd.load('train.nd') #加载抽取特征后的训练数据train.nd
 valid_nd = nd.load('valid.nd') #加载抽取特征后的验证数据valid.nd
-input_nd = nd.load('input.nd') #加载抽取特征后的训练验证数据input.nd
+#input_nd = nd.load('input.nd') #加载抽取特征后的训练验证数据input.nd
 
 f = open('ids_synsets', 'rb')
 ids_synsets = pickle.load(f) #加载训练数据的label文件ids_synsets
@@ -33,10 +33,9 @@ train_data = gluon.data.DataLoader(gluon.data.ArrayDataset(train_nd[0], train_nd
                                    batch_size=batch_size, shuffle=True)
 valid_data = gluon.data.DataLoader(gluon.data.ArrayDataset(valid_nd[0], valid_nd[1]),
                                    batch_size=batch_size, shuffle=True)
-input_data = gluon.data.DataLoader(gluon.data.ArrayDataset(input_nd[0], input_nd[1]),
-                                   batch_size=batch_size, shuffle=True)
+#input_data = gluon.data.DataLoader(gluon.data.ArrayDataset(input_nd[0], input_nd[1]),batch_size=batch_size, shuffle=True)
 
-#训练loss
+#验证集loss
 def get_loss(data, net, ctx):
     loss = 0.0
     for feas, label in data:
@@ -68,6 +67,7 @@ def train(net, train_data, valid_data, num_epochs, lr, wd, ctx):
             trainer.step(batch_size)
             _loss += nd.mean(loss).asscalar()
         cur_time = datetime.datetime.now() #记录一个epoch的时间
+        #转换为时分秒格式
         h, remainder = divmod((cur_time - prev_time).seconds, 3600)
         m, s = divmod(remainder, 60)
         time_str = "Time %02d:%02d:%02d" % (h, m, s)
@@ -96,6 +96,7 @@ def train(net, train_data, valid_data, num_epochs, lr, wd, ctx):
     #保存训练参模型文件
     plt.savefig(pngname, dpi=1000)
     net.collect_params().save(modelparams)
+    net.export('model')
 
 ctx = mx.gpu()
 net = Net(ctx).output

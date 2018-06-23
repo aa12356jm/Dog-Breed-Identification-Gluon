@@ -17,7 +17,7 @@ from model import Net,transform_test
 
 batch_size = 32
 
-data_dir = './data'
+data_dir = 'E:\\WorkSpace\\gluon-tutorials-zh_aa12356jm\\data\\kaggle_dog'
 test_dir = 'test'
 input_dir = 'train_valid_test'
 valid_dir = 'valid'
@@ -72,6 +72,7 @@ def SaveTest(test_data, net, ctx, name, ids, synsets):
         for i, output in zip(ids, outputs):
             f.write(i.split('.')[0] + ',' + ','.join(
                 [str(num) for num in output]) + '\n')
+    net.export('new_model')
 
 net = Net(mx.gpu(), netparams).net #构造网络来进行测试
 #net = get_net(netparams,mx.gpu())

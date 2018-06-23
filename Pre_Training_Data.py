@@ -13,7 +13,7 @@ from tqdm import tqdm
 import os
 from model import Net, transform_train, transform_test
 
-data_dir = './data'
+data_dir = 'E:\\WorkSpace\\gluon-tutorials-zh_aa12356jm\\data\\kaggle_dog'
 train_dir = 'train'
 test_dir = 'test'
 valid_dir = 'valid'
@@ -24,7 +24,7 @@ train_valid_dir = 'train_valid'
 input_str = data_dir + '/' + input_dir + '/'
 
 
-batch_size = 32
+batch_size = 128
 
 #训练数据，从train_valid_test/train文件夹中加载，使用函数transform_train进行数据转换和增强
 #transform_train函数生成2种图像，分别给两个网络进行训练
@@ -55,8 +55,8 @@ def SaveNd(data, net, name):
     print('提取特征 %s' % name)
     #tqdm就是为了显示数据加载的进度条，没有其它用途
     for fear1, fear2, label in tqdm(data):
-        fear1 = fear1.as_in_context(mx.gpu()) #取出transform_train函数第一种生成的数据
-        fear2 = fear2.as_in_context(mx.gpu()) #取出transform_train函数第二种生成的数据
+        fear1 = fear1.as_in_context(mx.gpu()) #将数据放在gpu上，取出transform_train函数第一种生成的数据
+        fear2 = fear2.as_in_context(mx.gpu()) #将数据放在gpu上，取出transform_train函数第二种生成的数据
         #将两种数据分别给两个网络进行训练
         out = net(fear1, fear2).as_in_context(mx.cpu())
         x.append(out)
@@ -71,7 +71,7 @@ SaveNd(train_data, net, 'train.nd')
 #通过net网络抽取所有验证集的特征，保存到valid.nd文件中
 SaveNd(valid_data, net, 'valid.nd')
 #通过net网络将所有的训练验证数据抽取特征，保存到input.nd，用来进行训练
-SaveNd(train_valid_data, net, 'input.nd')
+#SaveNd(train_valid_data, net, 'input.nd')
 
 #对测试数据重新排序
 ids = ids = sorted(os.listdir(os.path.join(data_dir, input_dir, 'test/unknown')))

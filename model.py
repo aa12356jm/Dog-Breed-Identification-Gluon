@@ -1,5 +1,6 @@
 '''
-此模块的主要作用：构造网络模型，对训练数据和测试数据进行扩增和转换
+此模块的主要作用：构造多个网络模型融合，对训练数据和测试数据进行扩增和转换
+优点：可以使用多个网络进行融合，提高精度，但是在c++中部署较难，c++部署还是选择model_new中的单网络结构
 '''
 
 from mxnet import init
@@ -36,7 +37,7 @@ class  OneNet(nn.HybridBlock):
     def hybrid_forward(self, F, x1, x2):
         return self.output(self.features(x1, x2))
 
-#对训练数据进行转换，如数据增强等等
+#对训练数据进行转换，如数据增强等等，将每个数据都处理2次，结果返回对应处理后的结果和标签
 def transform_train(data, label):
 
     #将图像调整为不同的大小，分别进行数据扩增,因为是使用两个模型进行融合，所以也使用两类数据分别给两个网络进行训练
