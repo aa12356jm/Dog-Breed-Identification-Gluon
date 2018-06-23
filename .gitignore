@@ -103,3 +103,8 @@ ENV/
 *.png
 /data
 *.nd
+/single_model/model-0000.params
+/single_model/new_model-symbol.json
+/single_model/model-symbol.json
+/single_model/new_model-0000.params
+/single_model/train.params
