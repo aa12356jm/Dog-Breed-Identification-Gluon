@@ -19,3 +19,11 @@
 通常 fine-tuning 的效果优于freezing，不过 freezing 可以快速得到一个不错的结果，主要适合小数据集且数据集差异不大的情况。
 
 在建立模型的时候，注意看 API 里的参数，比如 pretrained=True 这样的
+
+3，finetuning.py文件是使用微调的方式进行训练，更新所有的模型参数，这种方法训练出来的模型可以使用c++部署
+
+4，train.py文件中增加了MXboard的功能，将训练过程可视化，使用方式为：
+命令行中进入到logs文件夹所在目录，执行命令打开TensorBoard： tensorboard --logdir=./logs --host=127.0.0.1 --port=8888  
+然后在浏览器中输入：127.0.0.1:8888  可以看到训练过程
+具体可查看文章：https://zh.mxnet.io/blog/mxboard
+  
